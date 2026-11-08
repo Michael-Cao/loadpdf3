@@ -22,8 +22,8 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="ℹ️" Margin="0,0,5,0" FontSize="11" VerticalAlignment="Center"/>
                 <!-- ⚡ FIXED: Bound directly to MainViewModel's StatusMessage -->
-                <TextBlock x:Name="TxtStatus" 
-                           Text="{Binding StatusText, FallbackValue=Ready}" 
+                <TextBlock 
+                           Text="{Binding StatusText, FallbackValue=Ready!!!}" 
                            Foreground="#555555" FontSize="12" VerticalAlignment="Center"/>
             </StackPanel>
         </StatusBarItem>

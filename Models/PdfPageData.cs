@@ -6,18 +6,29 @@ namespace loadpdf3.Models
 {
     public class PdfPageData
     {
-        private int _width;
-        public int Width
-        {
-            get => _width;
-            set => _width = value;
-        }
+        public int Width { get; set; }
 
-        private int _height;
-        public int Height
-        {
-            get => _height;
-            set => _height = value;
-        }
+        public int Height { get; set; }
+
+        public List<PdfTextData> Texts { get; set; } = new();
+        public List<PdfObjectData> VisualObjects { get; set; } = new();
+    }
+
+    public class PdfTextData
+    {
+        public string Text { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+    }
+
+    public class PdfObjectData
+    {
+        public string Type { get; set; } // "Image", "Path", etc.
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 }

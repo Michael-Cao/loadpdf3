@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace loadpdf3.Views
 {
     /// <summary>
@@ -19,16 +21,10 @@ namespace loadpdf3.Views
     /// </summary>
     public partial class WorkspaceView : UserControl
     {
-        private WorkspaceViewModel ViewModel => DataContext as WorkspaceViewModel;
-
         public WorkspaceView()
         {
             InitializeComponent();
-        }
-
-        public WorkspaceView(WorkspaceViewModel viewModel) : this()
-        {
-            DataContext = viewModel;
+            DataContext = App.ServiceProvider.GetRequiredService<WorkspaceViewModel>();
         }
     }
 }

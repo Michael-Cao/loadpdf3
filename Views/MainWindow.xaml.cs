@@ -18,6 +18,8 @@ namespace loadpdf3.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        private MainViewModel ViewModel => DataContext as MainViewModel;
+
         public MainWindow()
         {
             InitializeComponent();

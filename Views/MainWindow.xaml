@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:loadpdf3.Views"
+        xmlns:vmodels="clr-namespace:loadpdf3.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid >
@@ -29,14 +30,12 @@
         </Menu>
 
         <Grid Grid.Row="1">
-            <local:WorkspaceView Grid.Column="0"
-                                 DataContext="{Binding Workspace, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <local:WorkspaceView Grid.Column="0"/>
         </Grid>
 
         <!-- Splitting Row 2 layout into: [Sidebar Panel | Grid Splitter | Main Workspace] -->
         <Grid Grid.Row="2">
-            <local:StatusBarView Grid.Column="0"
-                                 DataContext="{Binding StatusBar, RelativeSource={RelativeSource AncestorType=Window}}"/>
+            <local:StatusBarView Grid.Column="0"/>
         </Grid>
 
     </Grid>

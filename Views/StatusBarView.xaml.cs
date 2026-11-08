@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace loadpdf3.Views
 {
@@ -20,15 +22,10 @@ namespace loadpdf3.Views
     /// </summary>
     public partial class StatusBarView : UserControl
     {
-
         public StatusBarView()
         {
             InitializeComponent();
-        }
-
-        public StatusBarView(StatusBarViewModel viewModel) : this()
-        {
-            DataContext = viewModel;
+            DataContext = App.ServiceProvider.GetRequiredService<StatusBarViewModel>();
         }
     }
 }

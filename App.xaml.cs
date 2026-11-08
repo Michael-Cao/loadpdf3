@@ -52,31 +52,23 @@ namespace loadpdf3
             );
 
             services.AddSingleton<WorkspaceViewModel>();
-            services.AddSingleton<StatusBarViewModel>(
-                provider => new StatusBarViewModel(
+            services.AddSingleton<StatusBarViewModel>(provider => 
+                new StatusBarViewModel(
                     provider.GetRequiredService<IPdfMessenger>()
                 )
             );
-            services.AddSingleton<MainViewModel>();
-
-            services.AddSingleton<WorkspaceView>(provider =>
-                new WorkspaceView(
-                    provider.GetRequiredService<WorkspaceViewModel>()
-                )
-            );
-
-            services.AddSingleton<StatusBarView>(provider =>
-                new StatusBarView(
+            services.AddSingleton<MainViewModel>(
+                provider => new MainViewModel(
+                    provider.GetRequiredService<WorkspaceViewModel>(),
                     provider.GetRequiredService<StatusBarViewModel>()
                 )
             );
 
             services.AddSingleton<MainWindow>(provider =>
-            {
-                return new MainWindow(
+                new MainWindow(
                     provider.GetRequiredService<MainViewModel>()
-                );
-            });
+                )
+            );
         }
     }
 }

@@ -8,7 +8,7 @@ namespace loadpdf3.ViewModels
 {
     public class StatusBarViewModel : ViewModelBase
     {
-        private string _statusText = "ready";
+        private string _statusText = "ready???";
         private int _current;
         private int _max;
         public string StatusText 
