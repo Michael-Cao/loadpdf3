@@ -29,12 +29,14 @@
         </Menu>
 
         <Grid Grid.Row="1">
-            <local:WorkspaceView Grid.Column="0"/>
+            <local:WorkspaceView Grid.Column="0"
+                                 DataContext="{Binding Workspace, RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Grid>
 
         <!-- Splitting Row 2 layout into: [Sidebar Panel | Grid Splitter | Main Workspace] -->
         <Grid Grid.Row="2">
-            <local:StatusBarView Grid.Column="0"/>
+            <local:StatusBarView Grid.Column="0"
+                                 DataContext="{Binding StatusBar, RelativeSource={RelativeSource AncestorType=Window}}"/>
         </Grid>
 
     </Grid>

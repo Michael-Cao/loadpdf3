@@ -9,10 +9,12 @@ namespace loadpdf3.ViewModels
     public class MainViewModel : ViewModelBase
     {
         public WorkspaceViewModel Workspace { get; }
+        public StatusBarViewModel StatusBar { get; }
 
-        public MainViewModel(WorkspaceViewModel workspaceViewModel)
+        public MainViewModel(WorkspaceViewModel workspaceViewModel, StatusBarViewModel statusBarViewModel)
         {
             Workspace = workspaceViewModel ?? throw new ArgumentNullException(nameof(workspaceViewModel));
+            StatusBar = statusBarViewModel ?? throw new ArgumentNullException(nameof(statusBarViewModel));
         }
 
 

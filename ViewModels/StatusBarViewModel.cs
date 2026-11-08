@@ -8,10 +8,17 @@ namespace loadpdf3.ViewModels
 {
     public class StatusBarViewModel : ViewModelBase
     {
-        private string _statusText;
+        private string _statusText = "ready";
         private int _current;
         private int _max;
-        public string StatusText { get => _statusText; set { _statusText = value; OnPropertyChanged(nameof(StatusText)); } }
+        public string StatusText 
+        { 
+            get => _statusText; 
+            set { 
+                _statusText = value; 
+                OnPropertyChanged(nameof(StatusText)); 
+            } 
+        }
         public int Current { get => _current; set { _current = value; OnPropertyChanged(nameof(Current)); } }
         public int Max { get => _max; set { _max = value; OnPropertyChanged(nameof(Max)); } }
 
