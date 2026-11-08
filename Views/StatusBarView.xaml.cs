@@ -1,4 +1,5 @@
-﻿using loadpdf3.ViewModels;
+﻿using loadpdf3.Services;
+using loadpdf3.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,6 @@ namespace loadpdf3.Views
     /// </summary>
     public partial class StatusBarView : UserControl
     {
-        private StatusBarViewModel ViewModel => DataContext as StatusBarViewModel;
 
         public StatusBarView()
         {

@@ -45,10 +45,18 @@ namespace loadpdf3
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IPdfMessenger, PdfMessenger>();
-            services.AddSingleton<IPdfEngineService, PdfEngineService>();
+            services.AddSingleton<IPdfEngineService>(provider => 
+                new PdfEngineService(
+                    provider.GetRequiredService<IPdfMessenger>()
+                )
+            );
 
             services.AddSingleton<WorkspaceViewModel>();
-            services.AddSingleton<StatusBarViewModel>();
+            services.AddSingleton<StatusBarViewModel>(
+                provider => new StatusBarViewModel(
+                    provider.GetRequiredService<IPdfMessenger>()
+                )
+            );
             services.AddSingleton<MainViewModel>();
 
             services.AddSingleton<WorkspaceView>(provider =>

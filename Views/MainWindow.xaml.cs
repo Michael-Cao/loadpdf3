@@ -30,26 +30,9 @@ namespace loadpdf3.Views
 
         private void OpenPdf_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (this.DataContext is MainViewModel mainVm)
             {
-                if (this.DataContext == null)
-                {
-                    MessageBox.Show("错误：MainWindow 的 DataContext 为空（Null），请检查绑定链路。", "架构错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                if (this.DataContext is MainViewModel mainVm)
-                {
-                    mainVm.HandleOpenFileExecution();
-                }
-                else
-                {
-                    MessageBox.Show($"错误：DataContext 的类型不是 MainViewModel，而是 {this.DataContext.GetType().Name}", "架构错误", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"在 UI 层点击触发时发生致命错误:\n{ex.Message}\n\n{ex.StackTrace}", "点击异常", MessageBoxButton.OK, MessageBoxImage.Hand);
+                mainVm.HandleOpenFileExecution();
             }
         }
 

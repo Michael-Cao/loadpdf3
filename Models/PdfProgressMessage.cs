@@ -9,5 +9,7 @@ namespace loadpdf3.Models
         public bool IsLoading { get; set; }
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+        public string StatusText => IsLoading ? $"Loading: {CurrentPage} / {TotalPages} Page" : "Ready!";
+
     }
 }
