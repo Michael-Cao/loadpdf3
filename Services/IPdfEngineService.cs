@@ -7,6 +7,6 @@ namespace loadpdf3.Services
 {
     public interface IPdfEngineService
     {
-        Task<List<PdfPageData>> LoadAllPagesAsync(string filePath, IProgress<int> progress = null);
+        Task<PdfDocumentData> LoadAllPagesAsync(string filePath, IProgress<int> progress = null);
     }
 }

@@ -27,6 +27,8 @@ namespace loadpdf3.ViewModels
             set { _currentProgress = value; OnPropertyChanged();  }
         }
 
+        public Dictionary<int, FontMetadata> DocumentFonts { get; private set; }
+
         private ObservableCollection<PdfPageData> _pages = new();
         public ObservableCollection<PdfPageData> Pages
         {
@@ -52,9 +54,10 @@ namespace loadpdf3.ViewModels
                     CurrentProgress = currentPage;
                 });
 
-                var loadedPages = await _pdfEngineService.LoadAllPagesAsync(filePath, progressHandler);
+                var doc = await _pdfEngineService.LoadAllPagesAsync(filePath, progressHandler);
 
-                Pages = new ObservableCollection<PdfPageData>(loadedPages);
+                Pages = new ObservableCollection<PdfPageData>(doc.Pages);
+                DocumentFonts = doc.Fonts;
             }
             catch(Exception ex)
             {

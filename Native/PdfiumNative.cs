@@ -59,5 +59,17 @@ namespace loadpdf3.Native
 
         [DllImport(DllName, EntryPoint = "FPDFPage_CountObjects", CallingConvention = CallingConvention.Cdecl)]
         public static extern int FPDFPage_CountObjects(IntPtr page);
+
+        [DllImport(DllName, EntryPoint = "FPDFText_GetFontSize", CallingConvention = CallingConvention.Cdecl)]
+        public static extern double FPDFText_GetFontSize(IntPtr text_page, int char_index);
+
+        [DllImport(DllName, EntryPoint = "FPDFText_GetFontInfo", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int FPDFText_GetFontInfo(IntPtr text_page, int char_index, byte[] buffer, int buflen, ref int flags);
+
+        [DllImport(DllName, EntryPoint = "FPDFText_GetFontWeight", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int FPDFText_GetFontWeight(IntPtr text_page, int char_index);
+
+        [DllImport(DllName, EntryPoint = "FPDFText_GetCharIndexAtPos", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int FPDFText_GetCharIndexAtPos(IntPtr text_page, double x, double y, double xTolerance, double yTolerance);
     }
 }

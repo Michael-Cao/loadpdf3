@@ -17,7 +17,7 @@ namespace loadpdf3.Services
             _messenger = messenger;
         }
 
-        public async Task<List<PdfPageData>> LoadAllPagesAsync(string filePath, IProgress<int> progress = null)
+        public async Task<PdfDocumentData> LoadAllPagesAsync(string filePath, IProgress<int> progress = null)
         {
             if (!File.Exists(filePath)) throw new FileNotFoundException(filePath);
 
@@ -30,7 +30,8 @@ namespace loadpdf3.Services
                     throw new Exception($"Failed to load PDF document: {filePath}");
                 }
 
-                var pages = new List<PdfPageData>();
+                var fontRegistry = new PdfFontRegistry();
+                var docData = new PdfDocumentData();
 
                 try
                 {
@@ -47,10 +48,10 @@ namespace loadpdf3.Services
                                 int width = (int)PdfiumNative.FPDF_GetPageWidth(page);
                                 int height = (int)PdfiumNative.FPDF_GetPageHeight(page);
 
-                                var textSegments = ExtractTextSegments(page);
+                                var textSegments = ExtractTextSegments(page, fontRegistry);
                                 var visualObjects = ExtractVisualObjects(page);
 
-                                pages.Add(new PdfPageData
+                                docData.Pages.Add(new PdfPageData
                                 {
                                     Width = width,
                                     Height = height,
@@ -67,6 +68,7 @@ namespace loadpdf3.Services
                         _messenger.Publish(new PdfProgressMessage { IsLoading = true, CurrentPage = i + 1, TotalPages = pageCount });
                     }
 
+                    docData.Fonts = fontRegistry.GetAllFonts();
                 }
                 finally
                 {
@@ -74,12 +76,12 @@ namespace loadpdf3.Services
                     _messenger.Publish(new PdfProgressMessage { IsLoading = false });
                 }
 
-                return pages;
+                return docData;
             });
         }
 
 
-        private List<PdfTextData> ExtractTextSegments(IntPtr page)
+        private List<PdfTextData> ExtractTextSegments(IntPtr page, PdfFontRegistry fontRegistry)
         {
             var list = new List<PdfTextData>();
 
@@ -93,33 +95,60 @@ namespace loadpdf3.Services
 
                 int rectCount = PdfiumNative.FPDFText_CountRects(textPage, 0, charCount);
 
+                ushort[] textBuffer = new ushort[1024];
+                byte[] fontBuffer = new byte[256];
+
                 for (int i = 0; i < rectCount; i++)
                 {
                     double left = 0, top = 0, right = 0, bottom = 0;
                     if (PdfiumNative.FPDFText_GetRect(textPage, i, ref left, ref top, ref right, ref bottom))
                     {
-                        ushort[] buffer = new ushort[1024];
-
                         int len = PdfiumNative.FPDFText_GetBoundedText(
-                            textPage, left, top, right, bottom, buffer, buffer.Length);
+                            textPage, left, top, right, bottom, textBuffer, textBuffer.Length);
 
                         string text = string.Empty;
                         if (len > 0)
                         {
                             byte[] bytes = new byte[len * 2];
-                            Buffer.BlockCopy(buffer, 0, bytes, 0, bytes.Length);
+                            Buffer.BlockCopy(textBuffer, 0, bytes, 0, bytes.Length);
                             text = System.Text.Encoding.Unicode.GetString(bytes).TrimEnd('\0');
                         }
 
                         if (!string.IsNullOrWhiteSpace(text))
                         {
+                            int firstCharIndex = PdfiumNative.FPDFText_GetCharIndexAtPos(textPage, left + 1.0, top - 1.0, 5.0, 5.0);
+
+                            double fontSize = PdfiumNative.FPDFText_GetFontSize(textPage, firstCharIndex);
+
+                            int fontFlags = 0;
+                            int fontNameLen = PdfiumNative.FPDFText_GetFontInfo(textPage, firstCharIndex, fontBuffer, fontBuffer.Length, ref fontFlags);
+
+                            string fontName = "Unknown";
+                            if (fontNameLen > 0)
+                            {
+                                // 确保截取长度不超过 Buffer
+                                int charsToRead = Math.Min(fontNameLen, fontBuffer.Length);
+                                fontName = System.Text.Encoding.ASCII.GetString(fontBuffer, 0, charsToRead).TrimEnd('\0');
+                            }
+
+                            int fontWeight = PdfiumNative.FPDFText_GetFontWeight(textPage, firstCharIndex);
+
+                            bool isBold = fontWeight > 500 || (fontFlags & 0x40000) != 0;
+                            bool isItalic = (fontFlags & 64) != 0;
+                            
+                            int fontId = fontRegistry.GetOrRegisterFont(fontName, fontWeight, isBold, isItalic);
+
+
                             list.Add(new PdfTextData
                             {
                                 Text = text.Trim(),
                                 X = left,
                                 Y = bottom,
                                 Width = right - left,
-                                Height = top - bottom
+                                Height = top - bottom,
+
+                                FontId = fontId,
+                                FontSize = fontSize
                             });
                         }
                     }
